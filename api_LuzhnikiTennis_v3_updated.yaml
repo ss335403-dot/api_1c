@@ -968,6 +968,11 @@ paths:
         description: Идентификатор помещения
         schema:
           type: string
+      - name: mass_booking
+        in: query
+        description: Признак массового бронирования
+        schema:
+          type: boolean 
       requestBody:
         content:
           application/json:
@@ -1199,6 +1204,125 @@ paths:
                   type: string
                   description: URL-адрес для возврата пользователя в случае ошибки или отмены оплаты
                   example: https://tennis.luzhniki.ru/booking/fail
+                gift_to:
+                  type: object
+                  description: |
+                    Данные получателя сертификата (при покупке в подарок).
+                    
+                    **Важные требования:**
+                    1. Номенклатура сертификата для онлайн-продажи должна быть заведена в 1С с признаком/отметкой "Электронный".
+                    2. Фронтенд должен обязательно проверять корректность введенного номера телефона получателя перед отправкой (формат +7XXXXXXXXXX).
+                  properties:
+                    phone:
+                      type: string
+                      description: Номер телефона получателя. Фронтенд обязан предварительно провалидировать корректность номера.
+                      example: "+79991234567"
+                    name:
+                      type: string
+                      description: Имя получателя
+                      example: "Иван"
+                delayed_send_at:
+                  type: string
+                  format: date-time
+                  description: Дата и время отложенной отправки сертификата получателю (ISO 8601)
+                  example: "2026-09-25T15:00:00"
+                delay_seconds:
+                  type: integer
+                  description: Задержка отправки сертификата в секундах относительно времени оплаты
+                  example: 7200
+  /hs/api/v3/payment_link_status/:
+    get:
+      summary: Получить статус оплаты заказа {payment_link_status}
+      operationId: payment_link_status
+      description: |
+        Метод возвращает текущий статус оплаты заказа по его идентификатору `id` (полученному из `payment_link`).
+        
+        **Значения `status`:**
+        * `1` — Ожидает оплаты (в 1С: Не оплачено);
+        * `2` — Успешно оплачен (в 1С: Оплачено, сформированы Продажа и Поступление ДС);
+        * `3` — Отказ / ошибка оплаты или проведения в 1С (сопровождается полями `error`, `error_description`, `error_details`).
+      tags:
+      - Оплаты
+      parameters:
+      - name: apikey
+        in: header
+        description: API-ключ внешней системы
+        required: false
+        schema:
+          type: string
+        example: 409265d1-a0af-4ce8-88ec-7e3435024111
+      - name: id
+        in: query
+        description: Идентификатор заказа (order_id), возвращенный методом payment_link
+        required: true
+        schema:
+          type: string
+        example: 0648bd073be64aacb5d6dd48b344d24d
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                    description: Признак успешного выполнения запроса
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      status:
+                        type: integer
+                        description: 'Числовой статус оплаты: 1 - ожидает оплаты, 2 - оплачен, 3 - отказ/ошибка'
+                        enum: [1, 2, 3]
+                        example: 2
+                      error:
+                        type: string
+                        description: Краткое описание ошибки (заполняется при status=3)
+                        example: "Не удалось провести: \"Продажа\"! Остатка номенклатуры на складе недостаточно."
+                      error_description:
+                        type: string
+                        description: Человекочитаемое описание причины сбоя для отображения на фронтенде
+                        example: "Заказ оплачен в банке, но произошла ошибка обработки в 1С. Пожалуйста, обратитесь к администратору."
+                      error_details:
+                        type: string
+                        description: Полные технические детали ошибки из 1С
+              examples:
+                paid:
+                  summary: Заказ успешно оплачен
+                  value:
+                    result: true
+                    data:
+                      status: 2
+                pending:
+                  summary: Ожидает оплаты
+                  value:
+                    result: true
+                    data:
+                      status: 1
+                failed:
+                  summary: Ошибка оплаты или проведения в 1С
+                  value:
+                    result: true
+                    data:
+                      status: 3
+                      error: "Не удалось провести: \"Продажа\"! Остатка \"Сертификат\" на складе недостаточно."
+                      error_description: "Не удалось провести: \"Продажа\"! Остатка \"Сертификат\" на складе недостаточно."
+                      error_details: "{\"result\":false,\"error\":2003,\"error_message\":\"Не удалось провести...\"}"
+        '400':
+          description: Некорректный запрос (например, не передан параметр id или заказ не найден)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
   /hs/api/v3/appointment_trainers_v2/:
     get:
       responses:
@@ -1468,6 +1592,19 @@ paths:
                             temporarily_reserved:
                               description: Временная бронь
                               type: boolean
+                            locker_rooms:
+                              type: array
+                              description: Массив подобранных раздевалок (сьютов)
+                              items:
+                                $ref: '#/components/schemas/LockerRoomItem'
+                            locker_key_issued:
+                              type: boolean
+                              description: Флаг выдачи ключа от раздевалки
+                            locker_key_message:
+                              type:
+                              - string
+                              - 'null'
+                              description: Сообщение о ключе от раздевалки
                       temporarily_reserved:
                         description: Временная бронь
                         type: boolean
@@ -1504,6 +1641,9 @@ paths:
                             room_id:
                               description: Идентификатор помещения
                               $ref: '#/components/schemas/ID'
+                            count:
+                              type: integer
+                              description: Общее количество (для дополнительных услуг / сьютов)
                             resources:
                               description: Массив идентификаторов ресурсов
                               type: array
@@ -1529,6 +1669,22 @@ paths:
                       - 5@mail.ru
                     status: temporarily_reserved_need_payment
                     temporarily_reserved: true
+                    locker_rooms:
+                    - id: 8e3dba61-2440-11f1-96dd-0050568b5c63
+                      title: Сьют Москва 1
+                      start_date: '2023-02-28 18:30'
+                      end_date: '2023-02-28 21:30'
+                      duration: 180
+                      price: 12500
+                      sum: 12500
+                      is_paid: false
+                      service:
+                        id: 445e1400-0139-11f1-8939-0050568b5c63
+                        title: Сьют кд
+                      key_issued: false
+                      key_message: Ключ от раздевалки необходимо получить на рецепции клуба
+                    locker_key_issued: false
+                    locker_key_message: Ключ от раздевалки необходимо получить на рецепции клуба
                   temporarily_reserved: true
                   cart:
                   - record_array:
@@ -1542,6 +1698,8 @@ paths:
                     room_id: e07e5bc4-2bf9-11ec-910f-2c4d546557dd
                     resources:
                     - e07e5bc4-8bf9-11ec-910f-2c4d546557dd
+                  - service_id: 445e1400-013f-11f1-8939-0050568b5c63
+                    count: 2
         '400':
           description: Некорректный запрос
           content:
@@ -1556,10 +1714,89 @@ paths:
                 $ref: '#/components/schemas/InternalServerError'
       summary: Создать аренду зала {interval_rental}
       operationId: interval_rental
-      description: Метод осуществляет аренду помещения и возвращает структуру с данными
-        о созданной аренде. Отличается от метода [{rental}](#operation/post_rental)
-        тем, что принимает сразу несколько интевалов для создания аренды. В результате
-        выполнения может быть создано несколько занятий
+      description: |
+        Метод осуществляет аренду помещения и возвращает структуру с данными о созданной аренде. Отличается от метода [{rental}](#operation/post_rental) тем, что принимает сразу несколько интервалов для создания аренды. В результате выполнения может быть создано несколько занятий.
+
+        ---
+        ### 1. Первичное бронирование (без сьюта или сразу со сьютом)
+        - `service_id` — ID услуги аренды корта
+        - `room_id` — ID корта / помещения
+        - `record_array` — массив интервалов (`date_time`, `duration`)
+        - `locker_room_id` *(опционально)* — ID (UUID) услуги улучшения раздевалки (поле `service_id` из метода `locker_rooms`) ЛИБО ID помещения сьюта (поле `id` из метода `locker_rooms`). При передаче ID помещения 1С автоматически сопоставляет его с нужной услугой улучшения. Если параметр не передан — сьют не бронируется.
+        - `locker_room_count` *(опционально)* — количество запрашиваемых раздевалок (1 или 2). По умолчанию: 1.
+
+        Для каждого интервала из пачки автоматически подбирается свободная раздевалка (сьют) с учетом временного буфера (+/- 30 минут к занятию). Если на какой-либо интервал нет свободных сьютов, метод возвращает ошибку 1080.
+        При успешном создании временной брони возвращается массив созданных занятий `rentals` и корзина `cart` для последующей оплаты через `payment_link`.
+
+        ---
+        ### 2. Добавление сьютов к ранее созданным арендам кортов (Upgrade / Доплата разницы)
+        Если клиент изначально создал аренду корта БЕЗ сьюта, а затем решил добавить сьют (на этапе оформления заказа/корзины или уже после оплаты корта):
+
+        #### Что передавать фронтенду в теле запроса:
+        Фронтенд отправляет повторный запрос `POST /hs/api/v3/interval_rental/` со следующими полями:
+        1. `service_id` и `room_id` — те же самые ID услуги и корта, что и при создании аренды.
+        2. `locker_room_id` — ID услуги или помещения выбранного сьюта.
+        3. `locker_room_count` — количество сьютов (`1` или `2`).
+        4. В массиве `record_array` для каждого слота обязательно передать `rental_id` (UUID ранее созданного документа «Занятие», полученный из предыдущего ответа в `data.rentals[].rental.id` или `data.cart[0].record_array[].rental_id`):
+
+        ```json
+        {
+          "service_id": "a503fa44-366a-11ec-b135-f02f7488d897",
+          "room_id": "e07e5bc4-2bf9-11ec-910f-2c4d546557dd",
+          "locker_room_id": "445e1400-013f-11f1-8939-0050568b5c63",
+          "locker_room_count": 1,
+          "record_array": [
+            {
+              "date_time": "2026-09-30 10:00:00",
+              "duration": 60,
+              "rental_id": "8e3dba61-2440-11f1-96dd-0050568b5c63"
+            },
+            {
+              "date_time": "2026-09-30 11:00:00",
+              "duration": 60,
+              "rental_id": "9f4eca72-3551-11f1-97ee-0050568b5c64"
+            }
+          ]
+        }
+        ```
+        *(Также допускается передать `rental_id` строкой на верхнем уровне JSON через запятую: `"rental_id": "8e3dba61-..., 9f4eca72-..."`, однако передача `rental_id` внутри каждого элемента `record_array` является рекомендуемой).*
+
+        #### Что делает 1С и как оплачивается разница:
+        1. **Документы «Занятие» НЕ дублируются:** 1С находит существующие документы занятий по переданным `rental_id` и обновляет их — подбирает свободные сьюты, записывает их в документ и добавляет услугу сьюта в состав занятия.
+        2. **Расчет корзины `cart` и доплата:**
+           - **Сценарий А: Корты были во временной брони (ещё НЕ оплачены):**
+             В возвращаемом `cart` будут содержаться как интервалы корта, так и услуга сьюта. Фронтенд передает полученный `cart` в `POST /hs/api/v3/payment_link`, и клиент оплачивает весь заказ (корт + сьют) целиком.
+           - **Сценарий Б: Корты уже были ОПЛАЧЕНЫ клиентом ранее:**
+             1С определяет, что корт уже оплачен. В возвращаемом ответе оплаченные корты автоматически исключаются из позиций к оплате, и в массиве `cart` возвращается **ТОЛЬКО позиция сьюта**:
+             ```json
+             "cart": [
+               {
+                 "service_id": "445e1400-013f-11f1-8939-0050568b5c63",
+                 "count": 2
+               }
+             ]
+             ```
+             Фронтенд передает данный `cart` в метод `POST /hs/api/v3/payment_link`, в результате чего генерируется ссылка на оплату **только стоимости сьютов (доплата разницы)**.
+
+        ---
+        ### 3. Автоматическая привязка карты СКУД (ключа от раздевалки)
+        При бронировании раздевалки 1С проверяет наличие зарегистрированной активной карты/браслета клиента в клубе:
+        - **Если у клиента есть карта в клубе:** 1С автоматически привязывает её к забронированному сьюту:
+          - `card`: `{ "id": "...", "code": "123", "title": "123, Фамилия Имя" }`
+          - `key_issued`: `true`
+          - `physical_key_required`: `false`
+          - `access_type`: `"card"`
+          - `key_message`: `""`
+          - `locker_key_issued`: `true` (на уровне занятия)
+          *(Фронтенд может показать пользователю: «Доступ в раздевалку по вашей карте №123»).*
+        - **Если карты в клубе нет:**
+          - `card`: `null`
+          - `key_issued`: `false`
+          - `physical_key_required`: `true`
+          - `access_type`: `"reception"`
+          - `key_message`: `"Ключ от раздевалки необходимо получить на рецепции клуба"`
+          - `locker_key_issued`: `false`
+          *(Фронтенд отображает подсказку о необходимости получить ключ на рецепции).*
       tags:
       - Аренда зала
       parameters:
@@ -1586,7 +1823,8 @@ paths:
                 rental_id: 885fa908-ed18-4dde-a376-32ff921b8783
               service_id: a503fa44-366a-11ec-b135-f02f7488d897
               room_id: e07e5bc4-2bf9-11ec-910f-2c4d546557dd
-              locker_room_id: f2adaa8f-6cb4-11ed-b167-f02f7488d897
+              locker_room_id: 445e1400-013f-11f1-8939-0050568b5c63
+              locker_room_count: 1
               resources:
               - e07e5bc4-8bf9-11ec-910f-2c4d546557dd
             schema:
@@ -1607,7 +1845,10 @@ paths:
                   description: Идентификатор помещения
                 locker_room_id:
                   type: string
-                  description: Идентификатор раздевалки
+                  description: 'Идентификатор (UUID) услуги улучшения раздевалки (поле service_id из locker_rooms) ЛИБО помещения сьюта (поле id из locker_rooms). Если параметр не передан — сьют не бронируется (общая раздевалка).'
+                locker_room_count:
+                  type: integer
+                  description: Количество запрашиваемых раздевалок (1 или 2). Если параметр не передан или равен 0, по умолчанию принимается 1.
                 record_array:
                   $ref: '#/components/schemas/RecordRental'
                   description: Массив структур с временными интервалами
@@ -1766,6 +2007,126 @@ paths:
       description: Метод возвращает массив типов помещений для аренды.
       tags:
       - Аренда зала
+  /hs/api/v3/appointments/:
+    get:
+      tags:
+      - Занятия
+      summary: Список записей клиента (appointments)
+      description: Метод возвращает список бронирований и занятий клиента с информацией о привязанных раздевалках (locker_rooms), СКУД и статусах оплаты.
+      parameters:
+      - name: appointment_id
+        in: query
+        required: false
+        schema:
+          type: string
+        description: ID конкретной записи
+      - name: type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - classes
+          - personal
+          - rental
+        description: Тип занятия
+      - name: statuses
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Список статусов через запятую
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 50
+        description: Размер страницы
+      - name: requested_offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 0
+        description: Смещение
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        club_id:
+                          type: string
+                        appointment_id:
+                          type: string
+                        type:
+                          type: string
+                          enum:
+                          - classes
+                          - personal
+                          - rental
+                          - visit
+                        status:
+                          type: string
+                        arrival_status:
+                          type: string
+                        payment:
+                          type: object
+                        service:
+                          type: object
+                        room:
+                          type: object
+                        employee:
+                          type: object
+                        start_date:
+                          type: string
+                          example: '2026-12-20 09:00'
+                        end_date:
+                          type: string
+                          example: '2026-12-20 11:00'
+                        duration:
+                          type: integer
+                          example: 120
+                        day: 
+                          description: День недели
+                          type: integer
+                        regular_booking: 
+                          description: Признак массового бронирования
+                          type: boolean  
+                        cost:
+                          type: number
+                        locker_rooms:
+                          type: array
+                          description: Массив привязанных раздевалок / сьютов (пустой [], если раздевалок нет)
+                          items:
+                            $ref: '#/components/schemas/LockerRoomItem'
+                        locker_key_issued:
+                          type: boolean
+                          description: Флаг выдачи физического ключа/карты СКУД от всех забронированных раздевалок (true - все выданы или раздевалок нет)
+                        locker_key_message:
+                          type: string
+                          nullable: true
+                          description: Текст сообщения для клиента, если хотя бы один ключ ожидает выдачи на рецепции
+                  pagination_response:
+                    type: object
+                    properties:
+                      requested_offset:
+                        type: integer
+                      page_size:
+                        type: integer
+                      total_results:
+                        type: integer
   /hs/api/v3/visits_history:
     get:
       responses:
@@ -1795,6 +2156,12 @@ paths:
                         is_visit:
                           description: Посещение состоялось (клиент находился в клубе)
                           type: boolean
+                        day: 
+                          description: День недели
+                          type: integer
+                        regular_booking: 
+                          description: Признак массового бронирования
+                          type: boolean  
                         appointment_list:
                           description: Массив занятий клиента
                           type: array
@@ -1838,32 +2205,12 @@ paths:
                                 description: Список забронированных раздевалок / сьютов
                                 type: array
                                 items:
-                                  type: object
-                                  properties:
-                                    id:
-                                      type: string
-                                      description: Идентификатор помещения раздевалки
-                                    title:
-                                      type: string
-                                      description: Наименование раздевалки
-                                    key_issued:
-                                      type: boolean
-                                      description: Флаг выдачи физического ключа/карты СКУД от данной раздевалки (true - выдан, false - ожидает выдачи на рецепции)
+                                  $ref: '#/components/schemas/LockerRoomItem'
                               locker_room:
                                 description: Массив забронированных раздевалок / сьютов (алиас поля locker_rooms)
                                 type: array
                                 items:
-                                  type: object
-                                  properties:
-                                    id:
-                                      type: string
-                                      description: Идентификатор помещения раздевалки
-                                    title:
-                                      type: string
-                                      description: Наименование раздевалки
-                                    key_issued:
-                                      type: boolean
-                                      description: Флаг выдачи физического ключа/карты СКУД от данной раздевалки (true - выдан, false - ожидает выдачи на рецепции)
+                                  $ref: '#/components/schemas/LockerRoomItem'
                               locker_key_issued:
                                 description: Флаг выдачи физического ключа/карты СКУД от всех забронированных раздевалок (true - все выданы, false - ожидает выдачи на рецепции)
                                 type: boolean
@@ -1922,6 +2269,8 @@ paths:
                     start_date: 2019-07-22 15:30
                     end_date: 2019-07-22 17:00
                     duration: 90
+                    day: 1
+                    regular_booking: true
                     count: 1
                     arrival_status: arrived
                     service:
@@ -1933,10 +2282,14 @@ paths:
                     locker_rooms:
                     - id: 445e1400-013f-11f1-8939-0050568b5c63
                       title: Сьют №1
+                      photo: null
+                      pictures: []
                       key_issued: false
                     locker_room:
                     - id: 445e1400-013f-11f1-8939-0050568b5c63
                       title: Сьют №1
+                      photo: null
+                      pictures: []
                       key_issued: false
                     locker_key_issued: false
                     locker_key_message: Ключ от раздевалки необходимо получить на рецепции клуба
@@ -2204,13 +2557,20 @@ paths:
     get:
       summary: Получить интервалы для создания аренды
       operationId: booking_getSchedule
-      description: Метод возвращает доступные интервалы для создания аренды.
+      description: |
+        Метод возвращает доступные интервалы для создания аренды.
+
+        **Особенности для аренды сьютов (раздевалок):**
+        - Если `subPlaygroundID` не передан или передан пустым, доступность определяется по пулу помещений (сьютов), привязанных к услуге `serviceID` (регистр сведений «ПомещенияДляОказанияУслуг»).
+        - Слот помечается как `Свободно` (`status.name: "Свободно"`), если в этот интервал свободен хотя бы один сьют из привязанного пула.
+        - Занятость проверяется по документу «Занятие» с учетом основного помещения (`Помещение`), а также раздевалок (`АрендаРаздевалки_905555_ПомещениеN1` и `ПомещениеN2`).
+        - Слот помечается как `Занято`, только если заняты все сьюты из привязанного пула.
       tags:
       - Бронирование
       parameters:
       - name: clubID
         in: query
-        description: Идентификатор структурной единицы
+        description: Идентификатор структурной единицы (клуба)
         required: true
         schema:
           type: string
@@ -2222,34 +2582,36 @@ paths:
           type: string
       - name: subPlaygroundID
         in: query
-        description: Идентификатор помещения
-        required: true
+        description: |
+          Идентификатор конкретного помещения (корта).
+          Для подбора сьютов параметр указывать не нужно (или передавать пустым) — система автоматически проверит доступность по всем сьютам, привязанным к услуге `serviceID`.
+        required: false
         schema:
           type: string
       - name: serviceID
         in: query
-        description: Идентификатор услуги
+        description: Идентификатор услуги аренды (для сьютов — идентификатор услуги аренды сьюта)
         required: true
         schema:
           type: string
       - name: start
         in: query
-        description: Дата начала в формате ISO 8601
+        description: Дата начала периода в формате ISO 8601 (например, 2026-11-16T00:00:00+03:00 или 2026-11-16)
         required: true
         schema:
           type: string
           format: date-time
       - name: end
         in: query
-        description: Дата окончания в формате ISO 8601
-        required: true
+        description: Дата окончания периода в формате ISO 8601 (необязательный, по умолчанию рассчитывается до конца периода бронирования)
+        required: false
         schema:
           type: string
           format: date-time
       - name: countPlayers
         in: query
-        description: Количество клиентов
-        required: true
+        description: Количество клиентов/участников (необязательный, по умолчанию 1)
+        required: false
         schema:
           type: integer
           minimum: 1
@@ -2259,34 +2621,48 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    date:
-                      type: string
-                      format: date
-                    times:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          timeStart:
-                            type: string
-                          price:
-                            type: number
-                          currency:
-                            type: string
-                          status:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        date:
+                          type: string
+                          format: date
+                          example: "2026-11-16"
+                        times:
+                          type: array
+                          items:
                             type: object
                             properties:
-                              id:
+                              timeStart:
                                 type: string
-                              name:
+                                example: "07:00"
+                              price:
+                                type: number
+                                example: 12500
+                              currency:
                                 type: string
-                          duration:
-                            type: integer
-              example: []
+                                example: "RUR"
+                              status:
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                    example: "6f14a9e4-d901-4f75-998e-4ae9ab9253c3"
+                                  name:
+                                    type: string
+                                    example: "Свободно"
+                              duration:
+                                type: integer
+                                description: Длительность интервала в минутах
+                                example: 120
+                  error:
+                    type: object
+                    nullable: true
+                    example: null
         '400':
           description: Некорректный запрос
           content:
@@ -2429,6 +2805,96 @@ paths:
         schema:
           type: string
         example: 7e8245d1-574f-4ce8-88ec-7e34358df45              
+  /hs/api/v3/convert_certificate/:
+    post:
+      summary: Зачисление средств с подарочного сертификата на лицевой счет (депозит) {convert_certificate}
+      operationId: convert_certificate
+      description: |
+        Метод переносит номинал / остаток средств с подарочного сертификата на лицевой счет (депозит) клиента и закрывает сертификат.
+
+        **Важно (настройка на стороне 1С):**
+        Для работы метода в информационной базе 1С должна быть заполнена константа:
+        **«Лицевой счет для зачисления сертификатов по умолчанию»** (`API_825553_ЛСДляЗачисленияСертификтаПоУмолчанию`).
+        Она указывает вид лицевого счета, который создается для клиента автоматически, если параметр `deposit_id` не передан в запросе или у клиента еще нет лицевого счета этого вида.
+      tags:
+      - Оплаты
+      parameters:
+      - name: club_id
+        in: query
+        description: Идентификатор структурной единицы (клуба)
+        required: true
+        schema:
+          type: string
+        example: 849235b6-2bf5-11ec-910f-2c4d546557dd
+      - name: usertoken
+        in: header
+        description: Токен клиента
+        required: true
+        schema:
+          type: string
+        example: 7e8245d1-574f-4ce8-88ec-7e34358df45
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - certificate_series
+              properties:
+                certificate_series:
+                  type: string
+                  description: (Обязательный) Серия / номер подарочного сертификата
+                  example: "XIBS09I1LW"
+                deposit_id:
+                  type: string
+                  description: (Опциональный) Идентификатор (UUID) существующего лицевого счета клиента. Если не передан, зачисление выполняется на существующий подходящий счет клиента либо автоматически создается новый счет по виду из константы по умолчанию.
+                  example: "712b920a-b586-11f1-bca2-00505683a460"
+            examples:
+              example:
+                value:
+                  certificate_series: "XIBS09I1LW"
+                  deposit_id: "712b920a-b586-11f1-bca2-00505683a460"
+      responses:
+        '200':
+          description: Успешное зачисление
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      deposit_id:
+                        type: string
+                        description: Идентификатор (UUID) лицевого счета, на который зачислены средства
+                        example: "712b920a-b586-11f1-bca2-00505683a460"
+                      balance:
+                        type: number
+                        description: Итоговый баланс лицевого счета после зачисления
+                        example: 1060
+              example:
+                result: true
+                data:
+                  deposit_id: "712b920a-b586-11f1-bca2-00505683a460"
+                  balance: 1060
+        '400':
+          description: Ошибка запроса (сертификат не найден, не заполнен, закрыт или некорректный счет)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
 components:
   securitySchemes:
     basicAuth:
@@ -2804,19 +3270,20 @@ components:
     CartRental:
       type: object
       required:
-      - record_array
       - service_id
-      - room_id
       properties:
         record_array:
           $ref: '#/components/schemas/RecordRental'
-          description: Массив с интервалами записи
+          description: Массив с интервалами записи (для аренды корта)
         service_id:
           type: string
           description: Идентификатор услуги
         room_id:
           type: string
-          description: Идентификатор помещения
+          description: Идентификатор помещения (для аренды корта)
+        count:
+          type: integer
+          description: Общее количество (для дополнительных услуг / сьютов)
         resources:
           description: Массив идентификаторов ресурсов
           type: array
@@ -3053,3 +3520,98 @@ components:
           type: number
           format: float
           description: Сумма, на которую необходимо пополнить лицевой счет для оплаты.
+    LockerRoomItem:
+      type: object
+      description: Объект забронированной раздевалки / сьюта
+      properties:
+        id:
+          type: string
+          description: Идентификатор помещения раздевалки
+          example: 7a9b1234-5678-90ab-cdef-1234567890ab
+        title:
+          type: string
+          description: Наименование раздевалки
+          example: Сьют Москва 4
+        description:
+          type: string
+          description: Описание помещения
+        photo:
+          type: string
+          nullable: true
+          description: URL основной фотографии раздевалки
+        pictures:
+          type: array
+          description: Массив URL всех фотографий раздевалки
+          items:
+            type: string
+        start_date:
+          type: string
+          description: Дата и время начала аренды раздевалки (yyyy-MM-dd HH:mm)
+          example: '2026-12-20 09:00'
+        end_date:
+          type: string
+          description: Дата и время окончания аренды раздевалки (yyyy-MM-dd HH:mm)
+          example: '2026-12-20 10:30'
+        duration:
+          type: integer
+          description: Длительность аренды раздевалки в минутах
+          example: 90
+        price:
+          type: number
+          description: Цена услуги раздевалки
+          example: 3000
+        sum:
+          type: number
+          description: Итоговая сумма аренды раздевалки
+          example: 3000
+        is_paid:
+          type: boolean
+          description: Признак оплаты аренды раздевалки
+          example: true
+        service:
+          type: object
+          description: Услуга раздевалки
+          properties:
+            id:
+              type: string
+              description: Идентификатор услуги
+            title:
+              type: string
+              description: Наименование услуги
+        card:
+          type: object
+          nullable: true
+          description: Привязанная карта/ключ СКУД (null, если ключ еще не привязан)
+          properties:
+            id:
+              type: string
+              description: Идентификатор карты
+            code:
+              type: string
+              description: Номер/код карты
+            title:
+              type: string
+              description: Представление карты
+        key_issued:
+          type: boolean
+          description: Флаг привязки/выдачи карты СКУД (true - выдана, false - ожидает выдачи на рецепции)
+        physical_key_required:
+          type: boolean
+          description: Признак необходимости подойти на рецепцию за физическим ключом/картой
+        access_type:
+          type: string
+          enum:
+          - reception
+          - card
+          description: 'Вид доступа: reception (получить на рецепции клуба), card (выдана карта/браслет)'
+        key_message:
+          type: string
+          description: Подсказка для клиента о ключе
+      required:
+      - id
+      - title
+      - start_date
+      - end_date
+      - duration
+      - key_issued
+      - physical_key_required
