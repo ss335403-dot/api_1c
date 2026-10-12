@@ -2798,6 +2798,12 @@ paths:
         required: true
         schema:
           type: string
+      - name: apikey
+        in: header
+        description: e.g. 409265d1-a0af-4ce8-88ec-7e3435024111
+        required: true
+        schema:
+          type: string     
       responses:
         '200':
           description: OK
@@ -2835,6 +2841,11 @@ paths:
                               enum: ["true", "false"]
                               description: Пометка активности периода (строка "true"/"false")
                               example: "true"
+                            period_available:
+                              type: string
+                              enum: ["true", "false"]
+                              description: Пометка доступности периода для бронирования (строка "true"/"false"). Для неактивного периода приходит "false"
+                              example: "true"
                             available_rooms:
                               type: array
                               description: Помещения, доступные для бронирования в периоде. Для неактивного периода всегда пустой массив
@@ -2869,18 +2880,34 @@ paths:
                                     - "null"
                                     description: Площадь помещения. null, если не заполнена
                                     example: 120.5
-                      payment_period:
-                        type: object
-                        description: Период, в который доступна оплата (продление) аренды
-                        properties:
-                          start_date:
-                            type: string
-                            description: Дата окончания последней будущей аренды клиента в формате XML (ISO 8601). "0001-01-01T00:00:00", если будущих аренд нет
-                            example: "2026-11-15T21:00:00"
-                          end_date:
-                            type: string
-                            description: Дата разрешения продления (start_date + срок смещения доступности оплаты). "0001-01-01T00:00:00", если будущих аренд нет
-                            example: "2026-11-18T21:00:00"
+                                  available_from:
+                                    type: string
+                                    description: Дата, начиная с которой помещение доступно для бронирования, в формате XML (ISO 8601). "0001-01-01T00:00:00", если дата не задана
+                                    example: "0001-01-01T00:00:00"
+                            payment_period:
+                              type: object
+                              description: Период, в который доступна оплата (продление) аренды
+                              properties:
+                                start_date:
+                                  type: string
+                                  description: Дата окончания последней будущей аренды клиента в формате XML (ISO 8601). "0001-01-01T00:00:00", если будущих аренд нет
+                                  example: "2026-11-15T21:00:00"
+                                end_date:
+                                  type: string
+                                  description: Дата разрешения продления (start_date + срок смещения доступности оплаты). "0001-01-01T00:00:00", если будущих аренд нет
+                                  example: "2026-11-18T21:00:00"
+                            payment_period_default:
+                              type: object
+                              description: Период оплаты по умолчанию для данного периода бронирования
+                              properties:
+                                start_date:
+                                  type: string
+                                  description: Дата начала периода оплаты по умолчанию в формате XML (ISO 8601). "0001-01-01T00:00:00", если не задана
+                                  example: "2026-11-01T00:00:00"
+                                end_date:
+                                  type: string
+                                  description: Дата окончания периода оплаты по умолчанию в формате XML (ISO 8601). "0001-01-01T00:00:00", если не задана
+                                  example: "2026-11-30T00:00:00"
                   error:
                     type: 
                     - object
