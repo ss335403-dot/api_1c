@@ -132,14 +132,12 @@ paths:
           type: string
       - name: start_date
         in: query
-        description: Дата начала периода (если не передана, то бедет использоваться
-          текущая дата)
+        description: Дата начала периода (если не передана, то бедет использоваться текущая дата)
         schema:
           type: string
       - name: end_date
         in: query
-        description: Дата окончания периода (если не передана, то бедет использоваться
-          текущая дата плюс месяц)
+        description: Дата окончания периода (если не передана, то бедет использоваться текущая дата плюс месяц)
         schema:
           type: string
       - name: service_id
@@ -377,21 +375,18 @@ paths:
                 $ref: '#/components/schemas/InternalServerError'
       summary: Слоты для записи {rental_times_v2}
       operationId: rental_times_v2
-      description: Метод возвращает массив свободных интервалов для записи в переданном
-        диапазоне дат
+      description: Метод возвращает массив свободных интервалов для записи в переданном диапазоне дат
       tags:
       - Аренда зала
       parameters:
       - name: start_date
         in: query
-        description: Дата начала периода (если не передана, то бедет использоваться
-          текущая дата)
+        description: Дата начала периода (если не передана, то бедет использоваться текущая дата)
         schema:
           type: string
       - name: end_date
         in: query
-        description: Дата окончания периода (если не передана, то бедет использоваться
-          текущая дата плюс месяц)
+        description: Дата окончания периода (если не передана, то бедет использоваться текущая дата плюс месяц)
         schema:
           type: string
       - name: service_id
@@ -559,21 +554,18 @@ paths:
                 $ref: '#/components/schemas/InternalServerError'
       summary: Слоты для записи по помещениям на определенную дату {rental_rooms_times_v2}
       operationId: rental_rooms_times_v2
-      description: Метод возвращает массив свободных интервалов для записи на переданную
-        дату
+      description: Метод возвращает массив свободных интервалов для записи на переданную дату
       tags:
       - Аренда зала
       parameters:
       - name: start_date
         in: query
-        description: Дата начала периода (если не передана, то бедет использоваться
-          текущая дата)
+        description: Дата начала периода (если не передана, то бедет использоваться текущая дата)
         schema:
           type: string
       - name: end_date
         in: query
-        description: Дата окончания периода (если не передана, то бедет использоваться
-          конец текущего дня)
+        description: Дата окончания периода (если не передана, то бедет использоваться конец текущего дня)
         schema:
           type: string
       - name: service_id
@@ -751,8 +743,7 @@ paths:
                 $ref: '#/components/schemas/InternalServerError'
       summary: Проверка возможности бронирования в интервале {check_rental_intervals}
       operationId: check_rental_intervals
-      description: Метод возвращает количество рабочих и нерабочих дней. Если 'fail_count'
-        больше 0, значит интервал не доступен для бронирования
+      description: Метод возвращает количество рабочих и нерабочих дней. Если 'fail_count' больше 0, значит интервал не доступен для бронирования
       tags:
       - Аренда зала
       parameters:
@@ -802,8 +793,7 @@ paths:
                         employee_id:
                           $ref: '#/components/schemas/ID'
                         purchase_id:
-                          description: Идентификатор номенклатуры. Потребуется для
-                            последующего создания ссылки на оплату интервалов
+                          description: Идентификатор номенклатуры. Потребуется для последующего создания ссылки на оплату интервалов
                           $ref: '#/components/schemas/ID'
                         count:
                           type: integer
@@ -892,8 +882,8 @@ paths:
         content:
           application/json:
             example:
-              start_date: '2026-11-16 00:00'
-              end_date: '2026-11-17 00:00'
+              start_date: 2026-11-16 00:00
+              end_date: 2026-11-17 00:00
               room_id: 69a2b417-013f-11f1-8939-0050568b5c63
               mass_booking: true
               schedule:
@@ -925,7 +915,7 @@ paths:
                   $ref: '#/components/schemas/RentalScheduleTimes'
                 locker_room_id:
                   type: string
-                  description: 'Идентификатор (UUID) услуги улучшения раздевалки (поле service_id из locker_rooms) ЛИБО помещения сьюта (поле id из locker_rooms). Если параметр не передан — сьют не бронируется (общая раздевалка).'
+                  description: Идентификатор (UUID) услуги улучшения раздевалки (поле service_id из locker_rooms) ЛИБО помещения сьюта (поле id из locker_rooms). Если параметр не передан — сьют не бронируется (общая раздевалка).
                 locker_room_count:
                   type: integer
                   description: Количество запрашиваемых раздевалок (1 или 2). Если параметр не передан или равен 0, по умолчанию принимается 1.
@@ -998,7 +988,7 @@ paths:
         in: query
         description: Признак массового бронирования
         schema:
-          type: boolean 
+          type: boolean
       requestBody:
         content:
           application/json:
@@ -1007,8 +997,8 @@ paths:
                 value:
                   room_id: 69a2b417-013f-11f1-8939-0050568b5c63
                   mass_booking: true
-                  start_date: '2026-11-16 00:00'
-                  end_date: '2026-11-17 00:00'
+                  start_date: 2026-11-16 00:00
+                  end_date: 2026-11-17 00:00
                   schedule:
                   - day: 1
                     times:
@@ -1038,7 +1028,7 @@ paths:
                   $ref: '#/components/schemas/RentalScheduleTimes'
                 locker_room_id:
                   type: string
-                  description: 'Идентификатор (UUID) услуги улучшения раздевалки (поле service_id из locker_rooms) ЛИБО помещения сьюта (поле id из locker_rooms). Если параметр не передан — сьют не бронируется (общая раздевалка).'
+                  description: Идентификатор (UUID) услуги улучшения раздевалки (поле service_id из locker_rooms) ЛИБО помещения сьюта (поле id из locker_rooms). Если параметр не передан — сьют не бронируется (общая раздевалка).
                 locker_room_count:
                   type: integer
                   description: Количество запрашиваемых раздевалок (1 или 2). Если параметр не передан или равен 0, по умолчанию принимается 1.
@@ -1062,8 +1052,7 @@ paths:
                         type: string
                       id:
                         type: string
-                        description: Идентификатор заказа. Используется для последующего
-                          запроса статуса оплаты платёжной ссылки.
+                        description: Идентификатор заказа. Используется для последующего запроса статуса оплаты платёжной ссылки.
                     required:
                     - id
                 title: СоздатьСсылкуНаОплатуOk
@@ -1272,7 +1261,7 @@ paths:
                   type: object
                   description: |
                     Данные получателя сертификата (при покупке в подарок).
-                    
+
                     **Важные требования:**
                     1. Номенклатура сертификата для онлайн-продажи должна быть заведена в 1С с признаком/отметкой "Электронный".
                     2. Фронтенд должен обязательно проверять корректность введенного номера телефона получателя перед отправкой (формат +7XXXXXXXXXX).
@@ -1283,16 +1272,16 @@ paths:
                     phone:
                       type: string
                       description: Номер телефона получателя. Фронтенд обязан предварительно провалидировать корректность номера.
-                      example: "+79991234567"
+                      example: '+79991234567'
                     name:
                       type: string
                       description: Имя получателя
-                      example: "Иван"
+                      example: Иван
                 delayed_send_at:
                   type: string
                   format: date-time
                   description: Дата и время отложенной отправки сертификата получателю (ISO 8601)
-                  example: "2026-09-25T15:00:00"
+                  example: '2026-09-25T15:00:00'
                 delay_seconds:
                   type: integer
                   description: Задержка отправки сертификата в секундах относительно времени оплаты
@@ -1303,7 +1292,7 @@ paths:
       operationId: payment_link_status
       description: |
         Метод возвращает текущий статус оплаты заказа по его идентификатору `id` (полученному из `payment_link`).
-        
+
         **Значения `status`:**
         * `1` — Ожидает оплаты (в 1С: Не оплачено);
         * `2` — Успешно оплачен (в 1С: Оплачено, сформированы Продажа и Поступление ДС). Для заказов аренды/бронирования возвращается массив `rentals` с перечнем созданных занятий (`rental_id`, `room_id`, `start_date`, `end_date`);
@@ -1343,7 +1332,10 @@ paths:
                       status:
                         type: integer
                         description: 'Числовой статус оплаты: 1 - ожидает оплаты, 2 - оплачен, 3 - отказ/ошибка'
-                        enum: [1, 2, 3]
+                        enum:
+                        - 1
+                        - 2
+                        - 3
                         example: 2
                       rentals:
                         type: array
@@ -1366,11 +1358,11 @@ paths:
                       error:
                         type: string
                         description: Краткое описание ошибки (заполняется при status=3)
-                        example: "Не удалось провести: \"Продажа\"! Остатка номенклатуры на складе недостаточно."
+                        example: 'Не удалось провести: "Продажа"! Остатка номенклатуры на складе недостаточно.'
                       error_description:
                         type: string
                         description: Человекочитаемое описание причины сбоя для отображения на фронтенде
-                        example: "Заказ оплачен в банке, но произошла ошибка обработки в 1С. Пожалуйста, обратитесь к администратору."
+                        example: Заказ оплачен в банке, но произошла ошибка обработки в 1С. Пожалуйста, обратитесь к администратору.
                       error_details:
                         type: string
                         description: Полные технические детали ошибки из 1С
@@ -1398,9 +1390,9 @@ paths:
                     result: true
                     data:
                       status: 3
-                      error: "Не удалось провести: \"Продажа\"! Остатка \"Сертификат\" на складе недостаточно."
-                      error_description: "Не удалось провести: \"Продажа\"! Остатка \"Сертификат\" на складе недостаточно."
-                      error_details: "{\"result\":false,\"error\":2003,\"error_message\":\"Не удалось провести...\"}"
+                      error: 'Не удалось провести: "Продажа"! Остатка "Сертификат" на складе недостаточно.'
+                      error_description: 'Не удалось провести: "Продажа"! Остатка "Сертификат" на складе недостаточно.'
+                      error_details: '{"result":false,"error":2003,"error_message":"Не удалось провести..."}'
         '400':
           description: Некорректный запрос (например, не передан параметр id или заказ не найден)
           content:
@@ -1508,14 +1500,12 @@ paths:
       parameters:
       - name: start_date
         in: query
-        description: Дата начала периода (если не передана, то будет использоваться
-          текущая дата)
+        description: Дата начала периода (если не передана, то будет использоваться текущая дата)
         schema:
           type: string
       - name: end_date
         in: query
-        description: Дата окончания периода (если не передана, то будет использоваться
-          текущая дата плюс месяц)
+        description: Дата окончания периода (если не передана, то будет использоваться текущая дата плюс месяц)
         schema:
           type: string
       - name: room_id
@@ -1598,14 +1588,12 @@ paths:
           type: string
       - name: start_date
         in: query
-        description: Дата начала периода (если не передана, то бедет использоваться
-          текущая дата)
+        description: Дата начала периода (если не передана, то бедет использоваться текущая дата)
         schema:
           type: string
       - name: end_date
         in: query
-        description: Дата окончания периода (если не передана, то бедет использоваться
-          текущая дата плюс месяц)
+        description: Дата окончания периода (если не передана, то бедет использоваться текущая дата плюс месяц)
         schema:
           type: string
       - name: usertoken
@@ -1672,10 +1660,7 @@ paths:
                                   items:
                                     type: string
                             status:
-                              description: "Статус занятия (null когда клиент не записан)\
-                                \ \n- \"temporarily_reserved_need_payment\" - Временная\
-                                \ бронь \n- \"reserved\" - Записан без оплаты  \n\
-                                - \"reserved_and_payed\" - Записан и оплачено  "
+                              description: "Статус занятия (null когда клиент не записан) \n- \"temporarily_reserved_need_payment\" - Временная бронь \n- \"reserved\" - Записан без оплаты  \n- \"reserved_and_payed\" - Записан и оплачено  "
                               type:
                               - string
                               - 'null'
@@ -1711,15 +1696,13 @@ paths:
                                 type: object
                                 properties:
                                   date_time:
-                                    description: 'Время записи в формате: yyyy-MM-dd
-                                      HH:mm:ss'
+                                    description: 'Время записи в формате: yyyy-MM-dd HH:mm:ss'
                                     type: string
                                   duration:
                                     description: Длительность слота
                                     type: number
                                   rental_id:
-                                    description: Идентификатор аренды, если она ранее
-                                      была создана
+                                    description: Идентификатор аренды, если она ранее была создана
                                     $ref: '#/components/schemas/ID'
                                 required:
                                 - date_time
@@ -1762,8 +1745,8 @@ paths:
                     locker_rooms:
                     - id: 8e3dba61-2440-11f1-96dd-0050568b5c63
                       title: Сьют Москва 1
-                      start_date: '2023-02-28 18:30'
-                      end_date: '2023-02-28 21:30'
+                      start_date: 2023-02-28 18:30
+                      end_date: 2023-02-28 21:30
                       duration: 180
                       price: 12500
                       sum: 12500
@@ -1933,8 +1916,7 @@ paths:
               properties:
                 rental_id:
                   type: string
-                  description: Идентификатор аренды. Если передаётся этот параметр,
-                    то остальные параметры не требуются
+                  description: Идентификатор аренды. Если передаётся этот параметр, то остальные параметры не требуются
                 ticket_id:
                   type: string
                   description: Идентификатор основания оплаты
@@ -1946,7 +1928,7 @@ paths:
                   description: Идентификатор помещения
                 locker_room_id:
                   type: string
-                  description: 'Идентификатор (UUID) услуги улучшения раздевалки (поле service_id из locker_rooms) ЛИБО помещения сьюта (поле id из locker_rooms). Если параметр не передан — сьют не бронируется (общая раздевалка).'
+                  description: Идентификатор (UUID) услуги улучшения раздевалки (поле service_id из locker_rooms) ЛИБО помещения сьюта (поле id из locker_rooms). Если параметр не передан — сьют не бронируется (общая раздевалка).
                 locker_room_count:
                   type: integer
                   description: Количество запрашиваемых раздевалок (1 или 2). Если параметр не передан или равен 0, по умолчанию принимается 1.
@@ -2192,19 +2174,19 @@ paths:
                           type: object
                         start_date:
                           type: string
-                          example: '2026-12-20 09:00'
+                          example: 2026-12-20 09:00
                         end_date:
                           type: string
-                          example: '2026-12-20 11:00'
+                          example: 2026-12-20 11:00
                         duration:
                           type: integer
                           example: 120
-                        day: 
+                        day:
                           description: День недели
                           type: integer
-                        regular_booking: 
+                        regular_booking:
                           description: Признак массового бронирования
-                          type: boolean  
+                          type: boolean
                         cost:
                           type: number
                         locker_rooms:
@@ -2216,9 +2198,9 @@ paths:
                           type: boolean
                           description: Флаг выдачи физического ключа/карты СКУД от всех забронированных раздевалок (true - все выданы или раздевалок нет)
                         locker_key_message:
-                          type: 
-                            - string
-                            - "null"
+                          type:
+                          - string
+                          - 'null'
                           description: Текст сообщения для клиента, если хотя бы один ключ ожидает выдачи на рецепции
                   pagination_response:
                     type: object
@@ -2258,12 +2240,12 @@ paths:
                         is_visit:
                           description: Посещение состоялось (клиент находился в клубе)
                           type: boolean
-                        day: 
+                        day:
                           description: День недели
                           type: integer
-                        regular_booking: 
+                        regular_booking:
                           description: Признак массового бронирования
-                          type: boolean  
+                          type: boolean
                         appointment_list:
                           description: Массив занятий клиента
                           type: array
@@ -2274,13 +2256,10 @@ paths:
                                 description: Идентификатор занятия
                                 $ref: '#/components/schemas/ID'
                               type:
-                                description: 'Тип занятия: <ul><li> personal - персональное
-                                  </li><li>classes - групповое</li></ul>'
+                                description: 'Тип занятия: <ul><li> personal - персональное </li><li>classes - групповое</li></ul>'
                                 type: string
                               status:
-                                description: 'Статус занятия: <ul><li> planned - запланировано
-                                  </li><li> canceled - отменено </li><li> ended -
-                                  проведено</li><li>passes - проводится</li></ul>'
+                                description: 'Статус занятия: <ul><li> planned - запланировано </li><li> canceled - отменено </li><li> ended - проведено</li><li>passes - проводится</li></ul>'
                                 type: string
                               start_date:
                                 $ref: '#/components/schemas/StartDate'
@@ -2293,9 +2272,7 @@ paths:
                                 description: Количество услуг в занятии
                                 type: number
                               arrival_status:
-                                description: 'Статус прибытия клиента: <ul><li> arrived
-                                  - прибыл</li><li>not_arrived - не прибыл</li><li>canceled
-                                  - отменил</li>'
+                                description: 'Статус прибытия клиента: <ul><li> arrived - прибыл</li><li>not_arrived - не прибыл</li><li>canceled - отменил</li>'
                                 type: string
                               service:
                                 description: Услуга занятия
@@ -2344,8 +2321,7 @@ paths:
                                 type:
                                 - object
                                 - 'null'
-                                description: Структура оценки. Null если занятие не
-                                  оценено
+                                description: Структура оценки. Null если занятие не оценено
                                 properties:
                                   rating:
                                     description: Оценка занятия
@@ -2428,9 +2404,7 @@ paths:
                 $ref: '#/components/schemas/InternalServerError'
       summary: Получить историю посещений клиента {visits_history}
       operationId: visits_history
-      description: 'Метод возвращает массив данных, содержащий информацию о посещениях
-        клуба клиентом.  <br> Приоритет второстепенных параметров:  <br> 1. `service_id`  <br>
-        2. `type`'
+      description: 'Метод возвращает массив данных, содержащий информацию о посещениях клуба клиентом.  <br> Приоритет второстепенных параметров:  <br> 1. `service_id`  <br> 2. `type`'
       tags:
       - Клиенты
       parameters:
@@ -2451,8 +2425,7 @@ paths:
           type: string
       - name: club_id
         in: query
-        description: Идентификатор структурной единицы.(Если не передать, берется
-          первый из внешней системы)
+        description: Идентификатор структурной единицы.(Если не передать, берется первый из внешней системы)
         schema:
           type: string
       - name: order
@@ -2608,8 +2581,7 @@ paths:
     get:
       summary: Получить информацию о номенклатуре поиска тренера
       operationId: infoSearchTrainer
-      description: Метод возвращает наименование номенклатуры и ее цену для услуги
-        поиска тренера.
+      description: Метод возвращает наименование номенклатуры и ее цену для услуги поиска тренера.
       tags:
       - Информация о номенклатуре
       responses:
@@ -2642,7 +2614,7 @@ paths:
                 result: true
                 data:
                   name: Поиск тренера
-                  price: "1500.5"
+                  price: '1500.5'
         '400':
           description: Некорректный запрос
           content:
@@ -2733,7 +2705,7 @@ paths:
                         date:
                           type: string
                           format: date
-                          example: "2026-11-16"
+                          example: '2026-11-16'
                         times:
                           type: array
                           items:
@@ -2741,30 +2713,30 @@ paths:
                             properties:
                               timeStart:
                                 type: string
-                                example: "07:00"
+                                example: 07:00
                               price:
                                 type: number
                                 example: 12500
                               currency:
                                 type: string
-                                example: "RUR"
+                                example: RUR
                               status:
                                 type: object
                                 properties:
                                   id:
                                     type: string
-                                    example: "6f14a9e4-d901-4f75-998e-4ae9ab9253c3"
+                                    example: 6f14a9e4-d901-4f75-998e-4ae9ab9253c3
                                   name:
                                     type: string
-                                    example: "Свободно"
+                                    example: Свободно
                               duration:
                                 type: integer
                                 description: Длительность интервала в минутах
                                 example: 120
                   error:
-                    type: 
+                    type:
                     - object
-                    - "null"
+                    - 'null'
                     example: null
         '400':
           description: Некорректный запрос
@@ -2809,7 +2781,7 @@ paths:
                   data:
                     type:
                     - object
-                    - "null"
+                    - 'null'
                     description: Данные периодов бронирования. null, если периоды не найдены (Not Found)
                     properties:
                       available_periods:
@@ -2821,20 +2793,22 @@ paths:
                             name:
                               type: string
                               description: Наименование периода
-                              example: "Осенний семестр 2026"
+                              example: Осенний семестр 2026
                             start_date:
                               type: string
                               description: Дата начала периода в формате XML (ISO 8601)
-                              example: "2026-09-01T00:00:00"
+                              example: '2026-09-01T00:00:00'
                             end_date:
                               type: string
                               description: Дата окончания периода в формате XML (ISO 8601)
-                              example: "2026-12-31T23:59:59"
+                              example: '2026-12-31T23:59:59'
                             active:
                               type: string
-                              enum: ["true", "false"]
+                              enum:
+                              - 'true'
+                              - 'false'
                               description: Пометка активности периода (строка "true"/"false")
-                              example: "true"
+                              example: 'true'
                             available_rooms:
                               type: array
                               description: Помещения, доступные для бронирования в периоде. Для неактивного периода всегда пустой массив
@@ -2844,29 +2818,29 @@ paths:
                                   id:
                                     type: string
                                     description: Идентификатор помещения (GUID)
-                                    example: "a3f1c2d4-5b6e-4f78-9a0b-1c2d3e4f5a6b"
+                                    example: a3f1c2d4-5b6e-4f78-9a0b-1c2d3e4f5a6b
                                   title:
                                     type:
                                     - string
-                                    - "null"
+                                    - 'null'
                                     description: Наименование помещения
-                                    example: "Большой зал"
+                                    example: Большой зал
                                   description:
                                     type:
                                     - string
-                                    - "null"
+                                    - 'null'
                                     description: Описание помещения для внешней системы
-                                    example: "Просторный зал с зеркалами и паркетом"
+                                    example: Просторный зал с зеркалами и паркетом
                                   capacity:
                                     type:
                                     - integer
-                                    - "null"
+                                    - 'null'
                                     description: Вместимость помещения. null, если не заполнена
                                     example: 30
                                   area:
                                     type:
                                     - number
-                                    - "null"
+                                    - 'null'
                                     description: Площадь помещения. null, если не заполнена
                                     example: 120.5
                       payment_period:
@@ -2876,15 +2850,15 @@ paths:
                           start_date:
                             type: string
                             description: Дата окончания последней будущей аренды клиента в формате XML (ISO 8601). "0001-01-01T00:00:00", если будущих аренд нет
-                            example: "2026-11-15T21:00:00"
+                            example: '2026-11-15T21:00:00'
                           end_date:
                             type: string
                             description: Дата разрешения продления (start_date + срок смещения доступности оплаты). "0001-01-01T00:00:00", если будущих аренд нет
-                            example: "2026-11-18T21:00:00"
+                            example: '2026-11-18T21:00:00'
                   error:
-                    type: 
+                    type:
                     - object
-                    - "null"
+                    - 'null'
                     description: Структура ошибки. Заполняется, если данные не найдены (Not Found)
                     example: null
         '400':
@@ -2898,7 +2872,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InternalServerError'             
+                $ref: '#/components/schemas/InternalServerError'
   /hs/api/v3/rental_cart_cost/:
     get:
       responses:
@@ -2980,33 +2954,29 @@ paths:
                 $ref: '#/components/schemas/InternalServerError'
       summary: Рассчитать стоимость аренды {rental_cart_cost}
       operationId: rental_cart_cost
-      description: Метод рассчитывает стоимость аренды с учетом выбранных интервалов,
-        услуг, скидок и доступных способов оплаты.
+      description: Метод рассчитывает стоимость аренды с учетом выбранных интервалов, услуг, скидок и доступных способов оплаты.
       tags:
       - Аренда
       parameters:
       - name: cart
         in: query
-        description: "Строка Json с массивом структур, содержащих параметры:\n - **\"\
-          service_id\"** (идентификатор номенклатуры)\n - **\"room_id\"** (идентификатор\
-          \ помещения)\n - **\"record_array\"** (структура с интервалами для расчета,\
-          \ возвращается в методе [{interval_rental}](#operation/interval_rental))\n\
-          \  - **date_time** - Время записи\n  - **duration** - Длительность\n  -\
-          \ **rental_id** - Идентификатор аренды\n  - **optional_services**: - Дополнительные\
-          \ услуги\n    - **service_id** - Идентификатор услуги\n    - **count** -\
-          \ количество\n    - **employee_id** - Идентификатор сотрудника (если это\
-          \ персональное занятие)\n - **cart_pay** (структура с передаваемыми оплатами,\
-          \ если не указан, в структура возврата не будет структуры \"cart_pay\")\n\
-          \n\nПример такой строки:\n{\"cart_array\":[{\"record_array\": [{\"date_time\"\
-          : \"2023-02-27 19:00:00\",\"duration\": 120, \"rental_id\": \"04e58135-05a0-11f1-b20b-001a7dda7115\"\
-          , \"optional_services\": [{\"service_id\":\"ee176080-5bbe-11ef-b1c6-001a7dda7115\"\
-          ,\"count\":1},{\"service_id\":\"ad0b3d26-a51e-11f0-b1fe-001a7dda7115\",\"\
-          count\":1,\"employee_id\":\"3b680210-2d51-11ee-b18e-f02f7488d897\"}]},{\"\
-          date_time\": \"2023-02-27 22:00:00\",\"duration\": 60}],\"service_id\":\
-          \ \"37515859-3721-11ec-b135-f02f7488d897\",\"room_id\": \"e07e5bc4-2bf9-11ec-910f-2c4d546557dd\"\
-          }], \"cart_pay\":{\"pay_deposit\":[{\"id\":\"cb0a9cab-bb83-11ee-b1a3-f02f7488d897\"\
-          ,\"val\":\"11600\"},{\"id\":\"f9c4beff-bb86-11ee-b1a3-f02f7488d897\",\"\
-          val\":\"\"}],\"pay_bonus\":null,\"pay_certificate\":null}}\n"
+        description: |
+          Строка Json с массивом структур, содержащих параметры:
+           - **"service_id"** (идентификатор номенклатуры)
+           - **"room_id"** (идентификатор помещения)
+           - **"record_array"** (структура с интервалами для расчета, возвращается в методе [{interval_rental}](#operation/interval_rental))
+            - **date_time** - Время записи
+            - **duration** - Длительность
+            - **rental_id** - Идентификатор аренды
+            - **optional_services**: - Дополнительные услуги
+              - **service_id** - Идентификатор услуги
+              - **count** - количество
+              - **employee_id** - Идентификатор сотрудника (если это персональное занятие)
+           - **cart_pay** (структура с передаваемыми оплатами, если не указан, в структура возврата не будет структуры "cart_pay")
+
+
+          Пример такой строки:
+          {"cart_array":[{"record_array": [{"date_time": "2023-02-27 19:00:00","duration": 120, "rental_id": "04e58135-05a0-11f1-b20b-001a7dda7115", "optional_services": [{"service_id":"ee176080-5bbe-11ef-b1c6-001a7dda7115","count":1},{"service_id":"ad0b3d26-a51e-11f0-b1fe-001a7dda7115","count":1,"employee_id":"3b680210-2d51-11ee-b18e-f02f7488d897"}]},{"date_time": "2023-02-27 22:00:00","duration": 60}],"service_id": "37515859-3721-11ec-b135-f02f7488d897","room_id": "e07e5bc4-2bf9-11ec-910f-2c4d546557dd"}], "cart_pay":{"pay_deposit":[{"id":"cb0a9cab-bb83-11ee-b1a3-f02f7488d897","val":"11600"},{"id":"f9c4beff-bb86-11ee-b1a3-f02f7488d897","val":""}],"pay_bonus":null,"pay_certificate":null}}
         required: true
         schema:
           type: string
@@ -3028,7 +2998,7 @@ paths:
         required: false
         schema:
           type: string
-        example: 7e8245d1-574f-4ce8-88ec-7e34358df45              
+        example: 7e8245d1-574f-4ce8-88ec-7e34358df45
   /hs/api/v3/convert_certificate/:
     post:
       summary: Зачисление средств с подарочного сертификата на лицевой счет (депозит) {convert_certificate}
@@ -3069,16 +3039,16 @@ paths:
                 certificate_series:
                   type: string
                   description: (Обязательный) Серия / номер подарочного сертификата
-                  example: "XIBS09I1LW"
+                  example: XIBS09I1LW
                 deposit_id:
                   type: string
                   description: (Опциональный) Идентификатор (UUID) существующего лицевого счета клиента. Если не передан, зачисление выполняется на существующий подходящий счет клиента либо автоматически создается новый счет по виду из константы по умолчанию.
-                  example: "712b920a-b586-11f1-bca2-00505683a460"
+                  example: 712b920a-b586-11f1-bca2-00505683a460
             examples:
               example:
                 value:
-                  certificate_series: "XIBS09I1LW"
-                  deposit_id: "712b920a-b586-11f1-bca2-00505683a460"
+                  certificate_series: XIBS09I1LW
+                  deposit_id: 712b920a-b586-11f1-bca2-00505683a460
       responses:
         '200':
           description: Успешное зачисление
@@ -3097,7 +3067,7 @@ paths:
                       deposit_id:
                         type: string
                         description: Идентификатор (UUID) лицевого счета, на который зачислены средства
-                        example: "712b920a-b586-11f1-bca2-00505683a460"
+                        example: 712b920a-b586-11f1-bca2-00505683a460
                       balance:
                         type: number
                         description: Итоговый баланс лицевого счета после зачисления
@@ -3105,7 +3075,7 @@ paths:
               example:
                 result: true
                 data:
-                  deposit_id: "712b920a-b586-11f1-bca2-00505683a460"
+                  deposit_id: 712b920a-b586-11f1-bca2-00505683a460
                   balance: 1060
         '400':
           description: Ошибка запроса (сертификат не найден, не заполнен, закрыт или некорректный счет)
@@ -3119,6 +3089,364 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InternalServerError'
+  /hs/api/v3/cart_cost/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/ResultResponse'
+                  data:
+                    description: Данные запроса
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        cart:
+                          $ref: '#/components/schemas/Cart'
+                        total_amount:
+                          description: Общая сумма к оплате
+                          type: number
+                        total_discount:
+                          description: Общая сумма скидки
+                          type: number
+                        total_deposit:
+                          description: Общая сумма оплаты с лицевого счета
+                          type: number
+                        may_be_payment:
+                          $ref: '#/components/schemas/MayBePayment'
+                        promotions:
+                          description: Массив применяемых скидок и бонусов
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              type:
+                                description: |
+                                  Тип скидки:
+                                  - bonus - Бонус
+                                  - discount - Скидка
+                                  - gift - Подарок
+                                type: string
+                              title:
+                                $ref: '#/components/schemas/Title'
+                              amount:
+                                description: Сумма скидки
+                                type: number
+                            required:
+                            - type
+                            - title
+                            - amount
+                        use_sberbank_fiscalization:
+                          description: Признак фискализации в сбербанке
+                          type: string
+                        client:
+                          description: Структура клиента
+                          type: object
+                          properties:
+                            id:
+                              $ref: '#/components/schemas/ID'
+                            full_name:
+                              description: ФИО клиента
+                              type: string
+                            email:
+                              description: Электронная почта
+                              type: string
+                            phone:
+                              description: Номер телефона
+                              type: string
+                        org_id:
+                          description: Идентификатор организации
+                          $ref: '#/components/schemas/ID'
+                        club_id:
+                          description: Идентификатор клуба
+                          $ref: '#/components/schemas/ID'
+                        recurrent:
+                          description: Покупка рекурентного членства
+                          type: boolean
+                        customer_id:
+                          description: Идентификатор клиента платежной связки (null - recurrent = false)
+                          type: string
+                        use_cloudpayments_fiscalization:
+                          description: Признак фискализации в cloudpayments
+                          type: string
+                        use_yandex_fiscalization:
+                          description: Признак фискализации в Юкассе
+                          type: string
+                        show_gift_to:
+                          description: Признак возможности приобретения подарочных сертификатов
+                          type: boolean
+                        promocode:
+                          description: Промокод (если возможно приминить)
+                          type: string
+                        certificate:
+                          description: Сертификат (если возможно приминить)
+                          type: string
+                        cart_pay:
+                          description: Возможные способы оплаты
+                          type: string
+                        employee_choice_required:
+                          description: Необходим выбор сотрудника
+                          type: boolean
+                        course_choice_required:
+                          description: Необходим выбор секции
+                          type: boolean
+                        cycle_periods_choice_required:
+                          description: Необходим выбор периода секции
+                          type: boolean
+                        link_to_pay:
+                          description: Ссылка на оплату
+                          type: string
+                        bank_tax:
+                          description: |
+                            Система налогообложения
+                            - osn - Общая систем налогообложения
+                            - usn_income - Упрощенная доход
+                            - usn_income_outcome - Упрощенная доход минус расход
+                            - envd - Единый налог на вмененный доход
+                            - esn - Единый сельскохозяйственный налог
+                            - patent - Патентная система налогообложения
+                          type: string
+        '400':
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '401':
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/AuthorizationError'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+      summary: Получить стоимость корзины {cart_cost}
+      operationId: cart_cost
+      description: Метод возвращает массив цен номенклатур.
+      tags:
+      - Оплаты
+      parameters:
+      - name: cart
+        in: query
+        description: |
+          Строка Json с массивом структур, содержащих параметры:
+            - `purchase_id` (идентификатор номенклатуры)
+            - `count` (количество номенклатур)
+            - `price_type_id` (идентификатор вида цен, который можно получить из метода "employee_choice", если не указан, то вид цен будет браться из настроек внешней системы)
+            - `employee_id` (идентификатор сотрудника для получения вида цен сотрудника)
+            - `start_date` (дата время начала записи)
+            - `activation_date` (дата активации ЧПУ, передавать в виде: "2024-10-02")
+            - `ticket_id` (идентификатор членств/пакетов услуг, передается при покупке модификаторов)
+            - `service_id` (идентификатор услуги, передается при покупке основания для записи в занятие)
+            - `cart_pay` (структура с передаваемыми оплатами, если не указан, в структура возврата не будет структуры "cart_pay")
+            - `activation_date` (дата активации пакета услуг)
+
+          Пример такой строки:
+          {"cart_array":[{"purchase_id":"9ad49672-a043-11e7-ab37-000c2938171c","count":2, "price_type_id":"11149672-a043-11e7-ab37-000c2938171c"},{"purchase_id":"8bac3895-9e13-11e7-9966-0050568bd50c","count":1, "price_type_id":"33359672-a043-11e7-ab37-000c2938171c"}]}
+        required: true
+        schema:
+          type: string
+      - name: club_id
+        in: query
+        description: Идентификатор структурной единицы
+        required: true
+        schema:
+          type: string
+      - name: promocode
+        in: query
+        description: Промокод
+        schema:
+          type: string
+      - name: lead_id
+        in: query
+        description: Идентификатор заявки для быстрой покупки
+        schema:
+          type: string
+      - name: certificate
+        in: query
+        description: Серия сертификата
+        schema:
+          type: string
+      - name: usertoken
+        in: header
+        description: Ключ клиента
+        required: false
+        schema:
+          type: string
+        example: 7e8245d1-574f-4ce8-88ec-7e34358df45
+      - name: hold
+        in: query
+        description: Признак холдирования суммы.
+        required: false
+        schema:
+          type: boolean
+  /hs/api/v3/deposits/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/ResultResponse'
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: Идентификатор лицевого счета
+                        name:
+                          type: string
+                          description: Наименование лицевого счета
+                        balance:
+                          type: number
+                          description: Остаток лицевого счета
+                        type:
+                          type: object
+                          description: Структура вида лицевого счета
+                          properties:
+                            name:
+                              type: string
+                              description: Наименование вида лицевого счета
+                            id:
+                              type: string
+                              description: Идентификатор вида лицевого счета
+                        exists:
+                          type: boolean
+                          description: Наличие данного лицевого счета у клиента
+                        relatives_account:
+                          type: boolean
+                          description: Это лицевой счет родственника
+                        use_sberbank_fiscalization:
+                          type: boolean
+                          description: Флаг необходимости передачи данных в Сбербанк для фискализации.
+                        use_cloudpayments_fiscalization:
+                          type: boolean
+                          description: Флаг необходимости передачи данных в CloudPayments для фискализации.
+                        use_yandex_fiscalization:
+                          type: boolean
+                          description: Флаг необходимости передачи данных в Юкассе для фискализации.
+                        org_id:
+                          type: string
+                          description: Идентификатор организации
+                        clubs:
+                          type: array
+                          description: Массив структур клубов
+                          items:
+                            $ref: '#/components/schemas/IDTitle'
+                        bank_tax:
+                          type: string
+                          description: |
+                            Тип налогообложения ККТ:
+                            - "osn" - Общая систем налогообложения
+                            - "usn_income" - Упрощенная доход
+                            - "usn_income_outcome" - Упрощенная доход минус расход
+                            - "envd" - Единый налог на вмененный доход
+                            - "esn" - Единый сельскохозяйственный налог
+                            - "patent" - Патентная система налогообложения
+                        payment_object:
+                          type: string
+                          description: Признак предмета расчета
+                        payment_method:
+                          type: string
+                          description: Признак способа расчета
+                        tax:
+                          $ref: '#/components/schemas/VAT'
+                          description: Ставка НДС
+                        hold_balance:
+                          type: number
+                          format: float
+                          description: Захолдированная сумма.
+                        current_balance:
+                          type: number
+                          format: float
+                          description: Текущий баланс.
+              example:
+                result: true
+                data:
+                - id: 333c962e-52e8-11ea-89b6-2c4d546557dd
+                  name: Основной
+                  balance: 88659
+                  type:
+                    name: deposit
+                    id: 1a00a741-3d1b-11ea-96b5-38d547b31ac0
+                  exists: true
+                  relatives_account: false
+                  use_sberbank_fiscalization: false
+                  org_id: a001c5ec-f8c5-11e1-bd50-3860779088bc
+                  clubs:
+                  - id: 1a00a739-3d1b-11ea-96b5-38d547b31ac0
+                    title: Фит1
+                  hold_balance: 1190
+                  current_balance: 1190  
+                - id: fa523838-82e6-11ea-89bc-992d3fecf8ae
+                  name: Дополнительный
+                  balance: 1190
+                  type:
+                    name: deposit
+                    id: fa523837-82e6-11ea-89bc-992d3fecf8ae
+                  exists: true
+                  relatives_account: false
+                  use_sberbank_fiscalization: false
+                  org_id: a001c5ec-f8c5-11e1-bd50-3860779088bc
+                  clubs:
+                  - id: 1a00a739-3d1b-11ea-96b5-38d547b31ac0
+                    title: Фит1
+                  hold_balance: 1190
+                  current_balance: 1190 
+        '400':
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '401':
+          description: Ошибка авторизации
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/AuthorizationError'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+      summary: Получить список лицевых счетов {deposits}
+      operationId: deposits
+      description: Метод возвращает лицевые счета с балансом
+      tags:
+      - Оплаты
+      parameters:
+      - name: club_id
+        in: query
+        description: Идентификатор клуба
+        schema:
+          type: string
+      - name: usertoken
+        in: header
+        description: Ключ клиента
+        required: true
+        schema:
+          type: string
+        example: 580392-e6ba49428-0ac67fcd-f2180121
 components:
   securitySchemes:
     basicAuth:
@@ -3141,18 +3469,8 @@ components:
       description: Ключ родственника
   schemas:
     AuthorizationError:
-      description: Ошибка авторизации
-      type: object
-      properties:
-        result:
-          type: boolean
-          description: Результат запроса
-          default: false
-        data:
-          type: string
-      required:
-      - result
-      - data
+      description: Ошибка авторизации. Проверьте правильно ли переданы данные авторизации
+      type: string
     BadRequest:
       description: Некорректный запрос
       type: object
@@ -3195,13 +3513,10 @@ components:
         error_message: Произошла внутренняя ошибка...
     ResultResponse:
       default: true
-      description: 'Результат запроса
-
+      description: |
+        Результат запроса
         - true
-
         - false
-
-        '
     IDTitle:
       type: object
       properties:
@@ -3217,7 +3532,6 @@ components:
       type: string
       format: uuid
       example: 689c34d8-79ee-11ec-b13e-f02f7488d897
-      x-nullable: true
     Title:
       type: string
       example: Наменование элемента
@@ -3286,17 +3600,15 @@ components:
           x-nullable: true
         included:
           type: boolean
-          description: Параметр используемый в раздевалках. true если раздевалка доступна
-            клиенту бесплатно (включена в членство)
+          description: Параметр используемый в раздевалках. true если раздевалка доступна клиенту бесплатно (включена в членство)
           x-nullable: true
         service_id:
           type: string
-          description: 'Идентификатор (UUID) услуги по улучшению/аренде раздевалки (номенклатуры), если к помещению привязана услуга'
+          description: Идентификатор (UUID) услуги по улучшению/аренде раздевалки (номенклатуры), если к помещению привязана услуга
           x-nullable: true
         resources:
           type: array
-          description: Дерево ресурсов помещения. Возвращается, если 'resources_used'
-            = true
+          description: Дерево ресурсов помещения. Возвращается, если 'resources_used' = true
         items:
           type: object
           properties:
@@ -3381,8 +3693,7 @@ components:
           description: Количество номенклатуры
         price_type_id:
           type: string
-          description: Идентификатор вида цен. Его можно получить из метода "employee_choice".
-            Если не указан, то вид цен будет браться из настроек внешней системы
+          description: Идентификатор вида цен. Его можно получить из метода "employee_choice". Если не указан, то вид цен будет браться из настроек внешней системы
         employee_id:
           type: string
           description: Идентификатор сотрудника
@@ -3397,12 +3708,10 @@ components:
           description: Дата время начала записи
         ticket_id:
           type: string
-          description: Идентификатор членств/пакетов услуг (передается при покупке
-            модификаторов)
+          description: Идентификатор членств/пакетов услуг (передается при покупке модификаторов)
         service_id:
           type: string
-          description: Идентификатор услуги (передается при покупке основания для
-            записи в занятие)
+          description: Идентификатор услуги (передается при покупке основания для записи в занятие)
         rental_id:
           type: string
           description: Идентификатор занятия/брони (rental_id). Передается при покупке дополнительной услуги (сьюта) к существующей аренде
@@ -3429,15 +3738,13 @@ components:
       properties:
         type:
           type: string
-          description: Тип оплаты ("cash" - оплата наличными, "card" - оплата картой,
-            "deposit" - оплата с лицевого счета, "bonus" - оплата с бонусного счета)
+          description: Тип оплаты ("cash" - оплата наличными, "card" - оплата картой, "deposit" - оплата с лицевого счета, "bonus" - оплата с бонусного счета)
         amount:
           type: number
           description: Сумма оплаты
         id:
           type: string
-          description: Идентификатор лицевого (бонусного) счета (необходимо передавать
-            только при оплате с лицевого (бонусного) счета)
+          description: Идентификатор лицевого (бонусного) счета (необходимо передавать только при оплате с лицевого (бонусного) счета)
     RecordRental:
       type: object
       required:
@@ -3448,8 +3755,7 @@ components:
           description: 'Дата и время занятия. Пример: "2022-02-08T11:30:00"'
         duration:
           type: number
-          description: Длительность интервала в минутах (по умолчанию берётся из нормы
-            времени услуги).
+          description: Длительность интервала в минутах (по умолчанию берётся из нормы времени услуги).
         rental_id:
           description: Идентификатор занятия, которое будет оплачено
           $ref: '#/components/schemas/ID'
@@ -3466,8 +3772,7 @@ components:
                 description: Идентификатор доп.услуги
               count:
                 type: integer
-                description: Количество покупаемых услуг (при покупке персональной
-                  услуги можно не передавать)
+                description: Количество покупаемых услуг (при покупке персональной услуги можно не передавать)
               employee_id:
                 $ref: '#/components/schemas/ID'
                 description: Идентификатор сотрудника, проводящего персональную тренировку
@@ -3519,37 +3824,22 @@ components:
     VAT:
       type: string
       x-nullable: true
-      description: '"Ставка НДС":
-
+      description: |
+        "Ставка НДС":
         - 0 - Без НДС
-
         - 1 - Ставка 0
-
         - 2 – НДС чека по ставке 10%
-
         - 3 – НДС чека по ставке 18%
-
         - 4 – НДС чека по расчётной ставке 10/110
-
         - 5 – НДС чека по расчётной ставке 18/118
-
         - 6 – НДС чека по ставке 20%
-
         - 7 – НДС чека по расчётной ставке 20/120
-
         - 8 - НДС чека по ставке 5%
-
         - 9 - НДС чека по ставке 5/105
-
         - 10 - НДС чека по ставке 7%
-
         - 11 - НДС чека по ставке 7/107%
-
         - 12 - НДС чека по ставке 22%
-
         - 13 - НДС чека по ставке 22/122
-
-        '
     MayBePayment:
       description: Массив возможных оплат
       type: array
@@ -3561,18 +3851,12 @@ components:
           title:
             $ref: '#/components/schemas/Title'
           type:
-            description: 'Тип оплаты:
-
+            description: |
+              Тип оплаты:
               - deposit - Лицевой счет
-
               - bonus - Бонусный счет
-
               - certificate - Сертификат
-
-              - card - Карта (если оплата платежной связкой необходимо передать id
-              связки)
-
-              '
+              - card - Карта (если оплата платежной связкой необходимо передать id связки)
             type: string
           payment_amount:
             description: Максимально доступная сумма оплаты
@@ -3614,8 +3898,7 @@ components:
               vat:
                 $ref: '#/components/schemas/VAT'
               tax:
-                description: Ставка НДС с учетом типа фискализации (меняется в зависимости
-                  от используемого банка)
+                description: Ставка НДС с учетом типа фискализации (меняется в зависимости от используемого банка)
                 $ref: '#/components/schemas/VAT'
               tax_sum:
                 description: Сумма НДС
@@ -3642,8 +3925,7 @@ components:
                 description: Идентификатор ЧПУ
                 $ref: '#/components/schemas/ID'
               service_id:
-                description: Идентификатор услуги записи (передается при просчете
-                  корзины с занятия)
+                description: Идентификатор услуги записи (передается при просчете корзины с занятия)
                 $ref: '#/components/schemas/ID'
               employee_id:
                 description: Идентификатор сотрудника
@@ -3697,15 +3979,11 @@ components:
             type: object
             properties:
               type:
-                description: 'Тип скидки:
-
+                description: |
+                  Тип скидки:
                   - bonus - Бонус
-
                   - discount - Скидка
-
                   - gift - Подарок
-
-                  '
                 type: string
               title:
                 $ref: '#/components/schemas/Title'
@@ -3763,9 +4041,9 @@ components:
           type: string
           description: Описание помещения
         photo:
-          type: 
-            - string
-            - "null"
+          type:
+          - string
+          - 'null'
           description: URL основной фотографии раздевалки
         pictures:
           type: array
@@ -3775,11 +4053,11 @@ components:
         start_date:
           type: string
           description: Дата и время начала аренды раздевалки (yyyy-MM-dd HH:mm)
-          example: '2026-12-20 09:00'
+          example: 2026-12-20 09:00
         end_date:
           type: string
           description: Дата и время окончания аренды раздевалки (yyyy-MM-dd HH:mm)
-          example: '2026-12-20 10:30'
+          example: 2026-12-20 10:30
         duration:
           type: integer
           description: Длительность аренды раздевалки в минутах
@@ -3807,9 +4085,9 @@ components:
               type: string
               description: Наименование услуги
         card:
-          type: 
-            - object
-            - "null"
+          type:
+          - object
+          - 'null'
           description: Привязанная карта/ключ СКУД (null, если ключ еще не привязан)
           properties:
             id:
@@ -3844,3 +4122,113 @@ components:
       - duration
       - key_issued
       - physical_key_required
+    Cart:
+      type: array
+      description: Массив данных приобретаемых номекнлатур
+      items:
+        type: object
+        properties:
+          purchase:
+            description: Структура номенклатуры
+            type: object
+            properties:
+              id:
+                $ref: '#/components/schemas/ID'
+              title:
+                $ref: '#/components/schemas/Title'
+              description:
+                type: string
+                description: Описание номенклатуры
+              count_of_freezings:
+                type: integer
+                description: Количество дней заморозки
+              validity:
+                type: object
+                description: Параметры срока действия
+              auto_activation:
+                type: object
+                description: Параметры активации пакетов
+          count:
+            description: Приобретаемое количество
+            type: number
+          price_type:
+            description: Структура вида цен
+            $ref: '#/components/schemas/IDTitle'
+          price:
+            description: Цена
+            type: number
+          price_with_discount:
+            description: Цена со скидкой
+            type: number
+          discount_sum:
+            description: Сумма скидки
+            type: number
+          payment_amount:
+            description: Итоговая сумма оплаты по номенклатуре
+            type: number
+          vat:
+            $ref: '#/components/schemas/VAT'
+          tax:
+            description: Ставка НДС с учетом типа фискализации (меняется в зависимости от используемого банка)
+            $ref: '#/components/schemas/VAT'
+          tax_sum:
+            description: Сумма НДС
+            type: number
+          payment_object:
+            description: Признак предмета расчета
+            type: string
+          payment_method:
+            description: Способ предмета расчета
+            type: string
+          max_purchase_count:
+            description: Максимальное количество к покупке. null- нет ограничений
+            type: number
+          course_id:
+            description: Идентификатор секции
+            $ref: '#/components/schemas/ID'
+          cycle_period_id:
+            description: Идентификатор цикла периода секции
+            $ref: '#/components/schemas/ID'
+          activation_date:
+            description: Дата активации ЧПУ
+            type: string
+          ticket_id:
+            description: Идентификатор ЧПУ
+            $ref: '#/components/schemas/ID'
+          service_id:
+            description: Идентификатор услуги записи (передается при просчете корзины с занятия)
+            $ref: '#/components/schemas/ID'
+          employee_id:
+            description: Идентификатор сотрудника
+            $ref: '#/components/schemas/ID'
+          appointment_id:
+            description: Идентификатор занятия
+            $ref: '#/components/schemas/ID'
+          appointment:
+            description: Детальная информация занятия
+            type: object
+            properties:
+              start_date:
+                description: Дата и время начала занятия
+                type: string
+              end_date:
+                description: Дата и время окончания занятия
+                type: string
+              service:
+                description: Номенклатура занятия
+                $ref: '#/components/schemas/IDTitle'
+              room:
+                description: Помещение занятия
+                $ref: '#/components/schemas/IDTitle'
+          start_date:
+            description: Дата и время начала занятия (используется при записи)
+            type: string
+          employee_choice_required:
+            description: Необходим выбор сотрудника
+            type: boolean
+          course_choice_required:
+            description: Необходим выбор секции
+            type: boolean
+          cycle_periods_choice_required:
+            description: Необходим выбор периода секции
+            type: boolean
